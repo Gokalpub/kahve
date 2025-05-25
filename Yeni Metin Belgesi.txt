@@ -1,0 +1,2390 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kahve'm Coffee&Food</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Genel Stiller - Premium Kahve Teması (Modern ve Epik) */
+        :root {
+            --primary-dark: #3F2C2C; /* Koyu Toprak/Kahve */
+            --primary-medium: #8D6E63; /* Sıcak Kahve Tonu */
+            --primary-light: #BCAAA4; /* Açık Kahve Tonu */
+            --accent-gold: #FFD700; /* Parlak Altın */
+            --accent-creamy: #FFF8E1; /* Kremsi Beyaz - Vanilla Bean */
+            --text-dark: #333333;
+            --text-light: #6A6A6A;
+            --bg-gradient-start: #ECEFF1; /* Açık Gri Mavi */
+            --bg-gradient-end: #CFD8DC; /* Orta Gri Mavi */
+            --card-bg: #FFFFFF;
+            --border-color: #E0E0E0;
+            --input-border-focus: var(--primary-medium);
+            --shadow-subtle: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.18);
+            --success-color: #66BB6A; /* Yeşil Tonu */
+            --error-color: #EF5350; /* Kırmızı Tonu */
+            --info-color: #42A5F5; /* Mavi Tonu */
+            --modal-bg: rgba(0, 0, 0, 0.7);
+            --header-bg: linear-gradient(135deg, #4A302C 0%, #7F5539 100%); /* Başlık için özel degrade */
+        }
+
+        body {
+            font-family: 'Merriweather', serif; /* Daha okunaklı ve estetik font */
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(145deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            box-sizing: border-box;
+            position: relative;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Yükleme Barı */
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background-color: var(--accent-gold);
+            z-index: 1002;
+            transition: width 0.4s ease-out, opacity 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-gold);
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Başlangıç Yükleme Simgesi (CSS-only spinner) */
+        .loading-spinner {
+            border: 5px solid rgba(188, 170, 164, 0.3);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        .loading-spinner.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Ana Uygulama Başlığı */
+        .app-title {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            color: var(--accent-creamy); /* Başlık rengi daha belirgin */
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4.5em; /* Daha büyük başlangıç boyutu */
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 100;
+            pointer-events: none;
+            white-space: nowrap;
+            box-sizing: border-box;
+            padding: 0 15px;
+            max-width: 90%;
+            background: none; /* Başlangıçta arka plan yok */
+            border-radius: 0;
+        }
+
+        .app-title.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+        }
+
+        .app-title.small {
+            font-size: 1.8em; /* Küçülmüş hali */
+            top: 0; /* Üste sabitle */
+            left: 0;
+            width: 100%;
+            transform: translateX(0); /* Tamamen sola hizala */
+            color: var(--accent-creamy);
+            z-index: 50;
+            text-align: center;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            background: var(--header-bg); /* Özel degrade arka plan */
+            padding: 20px 0; /* İç boşluk */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: sticky; /* Sticky başlık */
+            top: 0;
+            border-radius: 0; /* Köşeleri yuvarlama */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px; /* Icon ve yazı arası boşluk */
+        }
+        .app-title.small i {
+            color: var(--accent-gold);
+            font-size: 1.2em;
+        }
+
+
+        /* Ana Konteyner / Paneller */
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 18px 50px var(--shadow-medium);
+            max-width: 650px; /* Daha geniş paneller */
+            width: 90%;
+            box-sizing: border-box;
+            margin: 120px auto 30px auto; /* Başlık için üst boşluk */
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(30px);
+            transition: opacity 0.4s ease-out, visibility 0.4s ease-out, transform 0.4s ease-out;
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .container.active-panel {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            display: flex;
+        }
+
+        /* Başlıklar */
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3em;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 45px;
+            position: relative;
+            padding-bottom: 15px;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 100px; /* Daha belirgin çizgi */
+            height: 6px; /* Daha kalın çizgi */
+            background-color: var(--accent-gold);
+            border-radius: 5px;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif; /* Daha güçlü başlık fontu */
+            font-size: 2.2em;
+            color: var(--primary-dark);
+            margin-top: 50px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            letter-spacing: 0.8px;
+            flex-shrink: 0;
+        }
+        h3 i {
+            color: var(--accent-gold);
+            font-size: 1.2em;
+        }
+         h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8em;
+            color: var(--primary-medium);
+            margin-top: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        h4 i {
+            color: var(--primary-light);
+            font-size: 1.1em;
+        }
+
+        /* Form Grupları ve Inputlar */
+        .form-group {
+            margin-bottom: 30px;
+            flex-shrink: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 1.15em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        label i {
+            color: var(--primary-light);
+            font-size: 1em;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 18px 22px;
+            border: 1px solid var(--border-color);
+            border-radius: 15px; /* Daha yuvarlak */
+            box-sizing: border-box;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--accent-creamy);
+            color: var(--text-dark);
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: var(--input-border-focus);
+            box-shadow: 0 0 0 6px rgba(141, 110, 99, 0.25); /* Daha belirgin odak */
+            outline: none;
+            background-color: white;
+        }
+
+        /* Butonlar */
+        button {
+            display: block;
+            width: 100%;
+            padding: 20px 25px;
+            background-color: var(--primary-medium);
+            color: white;
+            border: none;
+            border-radius: 15px; /* Daha yuvarlak */
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            margin-top: 28px;
+            letter-spacing: 1.2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+        button i {
+            font-size: 1.2em;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        button:disabled {
+            background-color: #D0D0D0;
+            color: #A0A0A0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-light);
+            margin-top: 40px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        .btn-secondary:hover {
+            background-color: #A5928C;
+        }
+        .btn-small {
+            padding: 14px 20px;
+            font-size: 1.1em;
+            margin-top: 18px;
+            width: auto;
+            align-self: flex-end;
+            margin-left: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: var(--primary-medium);
+            background-color: var(--accent-creamy);
+            border: 1px solid var(--border-color);
+        }
+        .btn-small:hover {
+             transform: translateY(-4px);
+             box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+             background-color: #F8F0E5;
+        }
+        .btn-small:disabled {
+             background-color: var(--accent-creamy);
+             border-color: #E0E0E0;
+             color: #B0B0B0;
+        }
+        .btn-small.info {
+            background-color: var(--info-color);
+            color: white;
+            border: none;
+        }
+        .btn-small.info:hover {
+            background-color: #3A8FD6;
+        }
+        .btn-small.error {
+            background-color: var(--error-color);
+            color: white;
+            border: none;
+        }
+        .btn-small.error:hover {
+            background-color: #D44242;
+        }
+
+        /* Mesaj Kutuları */
+        .message {
+            margin-top: 35px;
+            padding: 25px;
+            border-radius: 18px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.15em;
+            opacity: 0;
+            transition: opacity 0.4s ease, height 0.4s ease, transform 0.4s ease;
+            height: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow-subtle);
+            transform: translateY(15px);
+            flex-shrink: 0;
+        }
+        .message.show {
+            opacity: 1;
+            height: auto;
+            padding: 25px;
+            transform: translateY(0);
+        }
+        .message.success {
+            background-color: #E8F8E9;
+            color: var(--success-color);
+            border: 1px solid #9CCC9C;
+        }
+        .message.error {
+            background-color: #FFEBEE;
+            color: var(--error-color);
+            border: 1px solid #EF9A9A;
+        }
+        .message.info {
+            background-color: #E3F2FD;
+            color: var(--info-color);
+            border: 1px solid #90CAF9;
+        }
+
+        /* Müşteri Sadakat Kartı / Yıldız Göstergesi */
+        #customerStarsDisplay {
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary-medium));
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            font-size: 3em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            box-shadow: 0 12px 30px var(--shadow-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        #customerStarsDisplay:hover {
+            transform: translateY(-10px);
+        }
+        #customerStarsDisplay i {
+            font-size: 1.3em;
+            color: var(--accent-gold);
+            text-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+        }
+
+        /* Bilgi Kartları */
+        .info-card {
+            background-color: var(--accent-creamy);
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 35px;
+            border-left: 7px solid var(--primary-light);
+            box-shadow: 0 6px 25px var(--shadow-subtle);
+            color: var(--text-light);
+            font-size: 1.1em;
+            line-height: 1.8;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        .info-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px var(--shadow-medium);
+        }
+        .info-card p {
+            margin: 12px 0;
+        }
+        .info-card strong {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        #cafeRewardInfo {
+            text-align: center;
+            font-size: 1.25em;
+            margin-top: 30px;
+            padding: 28px;
+            background-color: #F8F4ED;
+            border-left: 7px solid var(--primary-light);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow-subtle);
+            flex-shrink: 0;
+        }
+        #cafeRewardInfo span {
+            font-weight: 700;
+            color: var(--primary-medium);
+        }
+
+        /* Kod Gösterimi */
+        #generatedCodeDisplay {
+            margin-top: 35px;
+            padding: 40px;
+            background-color: #FFFDE7;
+            border: 5px dashed var(--accent-gold);
+            border-radius: 18px;
+            text-align: center;
+            font-size: 3.5em; /* Daha büyük kod */
+            font-weight: 800; /* Daha kalın font */
+            color: var(--accent-gold);
+            letter-spacing: 6px;
+            box-shadow: 0 8px 25px rgba(255,215,0,0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            word-break: break-all;
+            flex-shrink: 0;
+        }
+        #generatedCodeDisplay:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.4);
+        }
+        #generatedCodeDisplay.hidden {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            margin-top: 0;
+            border: none;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        #generatedCodeTimer {
+            text-align: center;
+            margin-top: 25px;
+            font-weight: 700;
+            color: var(--error-color);
+            font-size: 1.4em;
+            transition: color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        /* Sadakat Verileri Listesi */
+        .customer-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 18px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.15em;
+            background-color: #FDFDFD;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px var(--shadow-subtle);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .customer-list-item:last-child {
+            border-bottom: none;
+        }
+        .customer-list-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px var(--shadow-medium);
+        }
+        .customer-list-item span:first-child {
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .customer-list-item span:last-child {
+            font-weight: 700;
+            color: var(--success-color);
+            font-size: 1.4em;
+        }
+        .customer-list-item i {
+            color: var(--primary-light);
+        }
+
+        /* Müşteri Paneli Sekmeleri */
+        .customer-tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 35px;
+            border-bottom: 2px solid var(--border-color);
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .customer-tabs button {
+            flex-grow: 1;
+            background-color: transparent;
+            color: var(--text-light);
+            padding: 16px 12px;
+            border: none;
+            border-bottom: 5px solid transparent; /* Daha belirgin çizgi */
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 0;
+            margin-top: 0;
+            box-shadow: none;
+            text-align: center;
+            flex-basis: calc(25% - 8px);
+            min-width: fit-content;
+        }
+        .customer-tabs button.active {
+            color: var(--primary-dark);
+            border-bottom-color: var(--accent-gold);
+            background-color: #F8F8F8;
+        }
+        .customer-tabs button:hover:not(.active) {
+            color: var(--primary-medium);
+            background-color: #F0F0F0;
+        }
+
+        /* Tab İçerikleri */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+
+        /* Placeholder mesajları */
+        .placeholder-message {
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+            padding: 28px;
+            background-color: #FBFBFB;
+            border-radius: 15px;
+            margin-top: 25px;
+            border: 1px dashed var(--border-color);
+        }
+
+        /* Modal Stilleri */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--modal-bg);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 18px 50px var(--shadow-medium);
+            width: 90%;
+            max-width: 750px;
+            position: relative;
+            animation: slideIn 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .close-button {
+            color: var(--text-light);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--primary-dark);
+            transform: rotate(90deg);
+        }
+
+        .modal h3 {
+            text-align: center;
+            color: var(--primary-medium);
+            font-size: 2.5em;
+            margin-bottom: 35px;
+            border-bottom: 3px solid var(--accent-gold);
+            padding-bottom: 15px;
+            display: block;
+            margin-top: 0;
+            flex-shrink: 0;
+        }
+        .modal h3 i {
+             color: var(--accent-gold);
+             margin-right: 15px;
+        }
+
+        .modal p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: var(--text-dark);
+        }
+        .modal strong {
+            color: var(--primary-medium);
+            margin-right: 12px;
+        }
+        .modal i {
+            margin-right: 12px;
+            color: var(--primary-light);
+        }
+
+        .modal .location-item, .modal .order-item, .modal .sponsor-item, .modal .admin-user-item {
+            background-color: #FDFDFD;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .modal .location-item:hover, .modal .order-item:hover, .modal .sponsor-item:hover, .modal .admin-user-item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .modal .location-item span, .modal .order-item span, .modal .sponsor-item span, .modal .admin-user-item span {
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 1.15em;
+        }
+        .modal .location-item .details, .modal .order-item .details, .modal .sponsor-item .details, .modal .admin-user-item .details {
+            font-size: 1em;
+            color: var(--text-light);
+            margin-left: 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .modal .location-item .details br {
+            display: none;
+        }
+         .modal .personal-info p {
+            margin-bottom: 18px;
+            font-size: 1.15em;
+            color: var(--text-dark);
+        }
+        .modal .personal-info strong {
+            color: var(--primary-medium);
+            margin-right: 12px;
+        }
+        .modal .personal-info i {
+            margin-right: 12px;
+            color: var(--primary-light);
+        }
+
+        /* Reward Request Button */
+        #requestRewardBtn {
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            border: 2px solid var(--primary-dark);
+            font-weight: 700;
+            font-size: 1.25em;
+            margin-top: 40px;
+            box-shadow: 0 10px 25px rgba(255,215,0,0.3);
+        }
+        #requestRewardBtn:hover {
+            background-color: #FFC900;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255,215,0,0.4);
+        }
+        #requestRewardBtn:disabled {
+            background-color: #E0E0E0;
+            color: #A0A0A0;
+            border-color: #C0C0C0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Edit Info Modal */
+        #editPersonalInfoModal .form-group {
+            margin-bottom: 28px;
+        }
+        #editPersonalInfoModal button {
+            margin-top: 28px;
+        }
+        #editPersonalInfoMessage {
+            margin-top: 28px;
+        }
+
+        /* Sponsor Yönetim Modalı */
+        .sponsor-item {
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 15px;
+            background-color: var(--accent-creamy);
+        }
+        .sponsor-item .sponsor-info {
+            gap: 8px;
+        }
+        .sponsor-item .sponsor-info strong {
+            font-size: 1.15em;
+        }
+        .sponsor-item .sponsor-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        .sponsor-item .sponsor-actions button {
+            width: auto;
+            margin: 0;
+            padding: 10px 18px;
+            font-size: 1em;
+            border-radius: 10px;
+            box-shadow: none;
+            flex-shrink: 1; /* Esnek boyutlandırma */
+        }
+        #addSponsorForm {
+            border-top: 2px solid var(--border-color);
+            padding-top: 25px;
+            margin-top: 25px;
+        }
+        #addSponsorForm .form-group {
+            margin-bottom: 18px;
+        }
+        #addSponsorMessage {
+            margin-top: 18px;
+        }
+
+        /* Admin User Yönetim Modalı */
+        .admin-user-item {
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 15px;
+            background-color: var(--accent-creamy);
+        }
+        .admin-user-item .user-info {
+            gap: 8px;
+        }
+        .admin-user-item .user-info strong {
+            font-size: 1.15em;
+        }
+        .admin-user-item .user-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        .admin-user-item .user-actions button {
+            width: auto;
+            margin: 0;
+            padding: 10px 18px;
+            font-size: 1em;
+            border-radius: 10px;
+            box-shadow: none;
+            flex-shrink: 1;
+        }
+        #createAdminUserForm {
+            border-top: 2px solid var(--border-color);
+            padding-top: 25px;
+            margin-top: 25px;
+        }
+        #createAdminUserForm .form-group {
+            margin-bottom: 18px;
+        }
+        #createAdminUserMessage {
+            margin-top: 18px;
+        }
+
+        /* Keyframe Animasyonları */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-70px); opacity: 0; } /* Daha belirgin kayma */
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .app-title {
+                font-size: 3.5em;
+                white-space: normal;
+                line-height: 1.2;
+                max-width: 95%;
+            }
+            .app-title.small {
+                font-size: 1.6em;
+                top: 0;
+                padding: 15px 0;
+                gap: 10px;
+            }
+            .container {
+                padding: 30px;
+                margin: 100px auto 25px auto;
+                border-radius: 18px;
+                width: calc(100% - 30px);
+                gap: 20px;
+            }
+            h2 {
+                font-size: 2.5em;
+                margin-bottom: 30px;
+            }
+            h3 {
+                font-size: 1.8em;
+                margin-top: 40px;
+                margin-bottom: 25px;
+                gap: 10px;
+            }
+            h4 {
+                font-size: 1.5em;
+                gap: 10px;
+            }
+            button {
+                padding: 16px 20px;
+                font-size: 1.1em;
+                margin-top: 22px;
+                gap: 10px;
+            }
+            .btn-secondary {
+                margin-top: 30px;
+            }
+            .btn-small {
+                padding: 12px 15px;
+                font-size: 0.95em;
+                margin-top: 15px;
+            }
+            .customer-tabs {
+                gap: 6px 4px;
+                margin-bottom: 30px;
+            }
+            .customer-tabs button {
+                padding: 12px 8px;
+                font-size: 1em;
+                flex-basis: calc(50% - 4px);
+            }
+            #customerStarsDisplay {
+                font-size: 2.5em;
+                padding: 30px;
+                gap: 15px;
+            }
+            #generatedCodeDisplay {
+                font-size: 2.8em;
+                padding: 25px;
+                letter-spacing: 3px;
+            }
+            .info-card, .message {
+                padding: 22px;
+                font-size: 1em;
+            }
+            .customer-list-item {
+                padding: 15px 12px;
+                font-size: 1.05em;
+            }
+            .modal-content {
+                padding: 25px;
+                max-width: 95%;
+                gap: 15px;
+            }
+            .modal h3 {
+                font-size: 2em;
+                margin-bottom: 25px;
+                gap: 10px;
+            }
+            .close-button {
+                font-size: 30px;
+                top: 15px;
+                right: 20px;
+            }
+            .modal .location-item .details, .modal .order-item .details, .modal .sponsor-item .details, .modal .admin-user-item .details {
+                font-size: 0.9em;
+                margin-left: 28px;
+            }
+            .modal .location-item, .modal .order-item, .modal .sponsor-item, .modal .admin-user-item {
+                padding: 18px;
+                margin-bottom: 12px;
+            }
+            .modal .location-item .details br {
+                display: initial;
+            }
+             .sponsor-item .sponsor-actions, .admin-user-item .user-actions {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+            .sponsor-item .sponsor-actions button, .admin-user-item .user-actions button {
+                width: 100%;
+                margin-top: 8px;
+            }
+
+            /* Admin Paneli İçin Ek Düzenlemeler */
+            #cafeOwnerPanel .form-group {
+                margin-bottom: 25px;
+            }
+            #cafeOwnerPanel button {
+                margin-top: 25px;
+            }
+            #topCustomersList .customer-list-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            #topCustomersList .customer-list-item span:last-child {
+                margin-left: 0;
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-title {
+                font-size: 2.5em;
+            }
+            .app-title.small {
+                font-size: 1.3em;
+                padding: 10px 0;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            h3 {
+                font-size: 1.6em;
+            }
+            #customerStarsDisplay {
+                font-size: 2em;
+                padding: 25px;
+            }
+            #generatedCodeDisplay {
+                font-size: 2.2em;
+                padding: 20px;
+                letter-spacing: 2px;
+            }
+            .customer-tabs button {
+                font-size: 0.9em;
+                padding: 10px 5px;
+            }
+            .modal h3 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingBar" class="loading-bar"></div>
+    <div id="loadingSpinner" class="loading-spinner"></div>
+    <div id="appTitle" class="app-title"><i class="fas fa-coffee"></i> Kahve'm Coffee&Food</div>
+
+    <div id="customerLoginSection" class="container">
+        <h2>Giriş Yap / Kayıt Ol</h2>
+        <p style="text-align: center; margin-bottom: 15px; color: var(--text-light);">
+            Kahve keyfinize başlamak ve yıldız kazanmak için giriş yapın veya hemen kayıt olun.
+        </p>
+        <div class="form-group">
+            <label for="customerUsername"><i class="fas fa-user"></i> Kullanıcı Adı:</label>
+            <input type="text" id="customerUsername" placeholder="Kullanıcı adınızı girin" required>
+        </div>
+        <div class="form-group">
+            <label for="customerPassword"><i class="fas fa-lock"></i> Şifre:</label>
+            <input type="password" id="customerPassword" placeholder="Şifrenizi girin" required>
+        </div>
+        <button id="customerLoginBtn"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
+        <div id="customerLoginMessage" class="message hidden"></div>
+        <button id="showCustomerRegisterBtn" class="btn-secondary">Hesabınız yok mu? <i class="fas fa-user-plus"></i> Kayıt Olun</button>
+        <button id="showCafeOwnerLoginBtn" class="btn-small">Kafe Sahibi Girişi</button>
+    </div>
+
+    <div id="customerRegisterSection" class="container">
+        <h2>Müşteri Kayıt</h2>
+        <p style="text-align: center; margin-bottom: 15px; color: var(--text-light);">
+            Hızlıca kayıt olun ve sadakat programımıza katılın!
+        </p>
+        <div class="form-group">
+            <label for="customerFullName"><i class="fas fa-signature"></i> Ad Soyad:</label>
+            <input type="text" id="customerFullName" placeholder="Adınızı ve soyadınızı girin" required>
+        </div>
+        <div class="form-group">
+            <label for="customerRegisterUsername"><i class="fas fa-user"></i> Kullanıcı Adı:</label>
+            <input type="text" id="customerRegisterUsername" placeholder="Kullanıcı adınızı girin" required>
+        </div>
+        <div class="form-group">
+            <label for="customerRegisterPassword"><i class="fas fa-lock"></i> Şifre:</label>
+            <input type="password" id="customerRegisterPassword" placeholder="Şifrenizi girin" required>
+        </div>
+         <div class="form-group">
+            <label for="customerEmail"><i class="fas fa-envelope"></i> E-posta:</label>
+            <input type="email" id="customerEmail" placeholder="E-posta adresinizi girin" required>
+        </div>
+        <div class="form-group">
+            <label for="customerPhone"><i class="fas fa-phone-alt"></i> Telefon Numarası:</label>
+            <input type="tel" id="customerPhone" placeholder="Telefon numaranızı girin (örn: 5xx-xxx-xx-xx)" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}">
+        </div>
+        <button id="customerRegisterBtn"><i class="fas fa-user-plus"></i> Kayıt Ol</button>
+        <div id="customerRegisterMessage" class="message hidden"></div>
+        <button id="backToCustomerLoginBtn" class="btn-small">Zaten hesabınız var mı? Giriş Yapın</button>
+    </div>
+
+    <div id="customerPanel" class="container">
+        <h2>Hoş Geldiniz, <span id="currentCustomerFullName"></span>!</h2>
+
+        <div id="customerStarsDisplay">
+            <i class="fas fa-star"></i> Yıldızınız: <span id="customerStars">0</span>
+        </div>
+
+        <div class="customer-tabs">
+            <button id="tabOverview" class="active" data-tab-content="tabContentOverview"><i class="fas fa-home"></i> Genel Bakış</button>
+            <button id="tabPersonalInfoBtn" data-tab-content="personalInfoContent"><i class="fas fa-user-circle"></i> Bilgilerim</button>
+            <button id="tabSponsorPlacesBtn" data-tab-content="sponsorPlacesContent"><i class="fas fa-handshake"></i> Sponsor Mekanlar</button>
+            <button id="tabMyPlacesBtn" data-tab-content="myPlacesContent"><i class="fas fa-history"></i> Geçmişim</button>
+        </div>
+
+        <div id="tabContentOverview" class="tab-content active">
+            <div class="info-card">
+                <p id="nextRewardInfo"></p>
+                <p id="cafeRewardInfo"></p>
+            </div>
+
+            <button id="requestRewardBtn" class="hidden"><i class="fas fa-gift"></i> Ücretsiz Kahve Talep Et</button>
+            <div id="rewardRequestMessage" class="message hidden"></div>
+
+            <h3><i class="fas fa-qrcode"></i> Yıldız Kazan</h3>
+            <p style="color: var(--text-light); margin-bottom: 15px;">
+                Kasadan aldığınız yıldız kodunu girerek hesabınıza yıldız ekleyin.
+            </p>
+            <div class="form-group">
+                <label for="starCode"><i class="fas fa-ticket-alt"></i> Yıldız Kodunuzu Girin:</label>
+                <input type="text" id="starCode" placeholder="Örn: KAHVE12345">
+            </div>
+            <button id="applyStarCodeBtn"><i class="fas fa-hand-holding-usd"></i> Yıldız Kazan</button>
+            <div id="starCodeMessage" class="message hidden"></div>
+        </div>
+
+        <div id="personalInfoContent" class="tab-content">
+            <div class="personal-info">
+                <p><i class="fas fa-user"></i> <strong>Ad Soyad:</strong> <span id="tabPersonalInfoFullName"></span></p>
+                <p><i class="fas fa-user-tag"></i> <strong>Kullanıcı Adı:</strong> <span id="tabPersonalInfoUsername"></span></p>
+                <p><i class="fas fa-envelope"></i> <strong>E-posta:</strong> <span id="tabPersonalInfoEmail"></span></p>
+                <p><i class="fas fa-phone-alt"></i> <strong>Telefon:</strong> <span id="tabPersonalInfoPhone"></span></p>
+            </div>
+            <button id="editPersonalInfoBtnInTab"><i class="fas fa-edit"></i> Bilgileri Düzenle</button>
+            <div id="editPersonalInfoMessageInTab" class="message hidden"></div>
+        </div>
+
+        <div id="sponsorPlacesContent" class="tab-content">
+            <h3><i class="fas fa-handshake"></i> Sponsor Mekanlarımız</h3>
+            <div id="tabSponsorPlacesList">
+                <p class="placeholder-message">Henüz kayıtlı sponsor mekanımız bulunmamaktadır.</p>
+            </div>
+        </div>
+
+        <div id="myPlacesContent" class="tab-content">
+            <h3><i class="fas fa-history"></i> Ziyaretlerim ve Yıldız Geçmişim</h3>
+            <div id="tabMyPlacesOrderHistory">
+                <p class="placeholder-message">Henüz ziyaret ettiğiniz bir mekan veya yıldız işleminiz yok.</p>
+            </div>
+        </div>
+
+        <button id="customerLogoutBtn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
+    </div>
+
+    <div id="cafeOwnerLoginSection" class="container">
+        <h2>Kafe Sahibi Girişi</h2>
+        <p style="text-align: center; margin-bottom: 15px; color: var(--text-light);">
+            Yönetim paneline erişmek için giriş yapın.
+        </p>
+        <div class="form-group">
+            <label for="ownerUsername"><i class="fas fa-user-tie"></i> Kullanıcı Adı:</label>
+            <input type="text" id="ownerUsername" placeholder="Kafe sahibi kullanıcı adı">
+        </div>
+        <div class="form-group">
+            <label for="ownerPassword"><i class="fas fa-key"></i> Şifre:</label>
+            <input type="password" id="ownerPassword" placeholder="Şifre">
+        </div>
+        <button id="ownerLoginBtn"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
+        <div id="ownerLoginMessage" class="message hidden"></div>
+        <button id="backToCustomerLoginFromAdmin" class="btn-small">Müşteri Girişi</button>
+    </div>
+
+    <div id="cafeOwnerPanel" class="container">
+        <h2><i class="fas fa-mug-hot"></i> Kafe Yönetim Paneli</h2>
+
+        <h3><i class="fas fa-award"></i> Sadakat Ödüllerini Tanımla</h3>
+        <div class="info-card">
+             <p>Müşterilerinizin kaç yıldızda hangi ödülü kazanacağını belirleyin. Değişiklikler anında geçerli olacaktır.</p>
+        </div>
+        <div class="form-group">
+            <label for="rewardStars"><i class="fas fa-star"></i> Kaç Yıldızda Ödül Verilsin?</label>
+            <input type="number" id="rewardStars" value="7" min="1" required>
+        </div>
+        <div class="form-group">
+            <label for="rewardDescription"><i class="fas fa-gift"></i> Ödül Açıklaması:</label>
+            <textarea id="rewardDescription" rows="3" placeholder="Örn: Ücretsiz Orta Boy Filtre Kahve" required></textarea>
+        </div>
+        <button id="saveRewardBtn"><i class="fas fa-save"></i> Ödülü Kaydet</button>
+        <div id="rewardSaveMessage" class="message hidden"></div>
+
+        <h3><i class="fas fa-ticket-alt"></i> Müşteri Kodu Oluştur</h3>
+        <div class="info-card">
+             <p>Her satış sonrası bu butona basarak müşterinize vereceğiniz **tek kullanımlık** bir kod oluşturun. Kod **2 dakika** geçerli kalacaktır.</p>
+        </div>
+        <button id="generateCodeBtn"><i class="fas fa-plus-circle"></i> Yeni Kod Oluştur</button>
+        <div id="generatedCodeDisplay" class="hidden" title="Kopyalamak için tıklayın"></div>
+        <div id="generatedCodeTimer"></div>
+        <div id="codeGenerationMessage" class="message hidden"></div>
+
+        <h3><i class="fas fa-handshake"></i> Sponsor Mekanlarını Yönet</h3>
+        <div class="info-card">
+            <p>Sadakat programınıza katılan sponsor mekanlarınızı buradan ekleyebilir, düzenleyebilir veya kaldırabilirsiniz.</p>
+        </div>
+        <button id="manageSponsorsBtn"><i class="fas fa-cog"></i> Sponsor Mekanlarını Yönet</button>
+
+        <h3><i class="fas fa-users-cog"></i> Kafe Adminlerini Yönet</h3>
+        <div class="info-card">
+            <p>Yeni kafe admin kullanıcıları oluşturabilir, mevcut adminlerin şifrelerini güncelleyebilir veya silebilirsiniz.</p>
+        </div>
+        <button id="manageAdminUsersBtn"><i class="fas fa-user-shield"></i> Admin Kullanıcıları Yönet</button>
+
+        <h3><i class="fas fa-chart-line"></i> Sadakat Verileri ve İstatistikler</h3>
+        <div class="info-card">
+             <p>Toplam müşteri sayınızı ve en sadık müşterilerinizi buradan takip edebilirsiniz.</p>
+             <p>Toplam Müşteri: <strong id="totalCustomersCount">0</strong></p>
+        </div>
+        <h4><i class="fas fa-medal"></i> En Sadık Müşteriler:</h4>
+        <div id="topCustomersList">
+            <p class="placeholder-message">Henüz kayıtlı müşteri yok.</p>
+        </div>
+        <button id="ownerLogoutBtn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
+    </div>
+
+    <div id="editPersonalInfoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" data-modal="editPersonalInfoModal">&times;</span>
+            <h3><i class="fas fa-user-edit"></i> Bilgilerimi Düzenle</h3>
+            <div class="form-group">
+                <label for="editFullName"><i class="fas fa-signature"></i> Ad Soyad:</label>
+                <input type="text" id="editFullName" required>
+            </div>
+            <div class="form-group">
+                <label for="editEmail"><i class="fas fa-envelope"></i> E-posta:</label>
+                <input type="email" id="editEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="editPhone"><i class="fas fa-phone-alt"></i> Telefon Numarası:</label>
+                <input type="tel" id="editPhone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}" required>
+            </div>
+            <button id="savePersonalInfoBtn"><i class="fas fa-save"></i> Değişiklikleri Kaydet</button>
+            <div id="editPersonalInfoMessage" class="message hidden"></div>
+        </div>
+    </div>
+
+    <div id="manageSponsorsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" data-modal="manageSponsorsModal">&times;</span>
+            <h3><i class="fas fa-store"></i> Sponsor Mekanlarını Yönet</h3>
+
+            <h4><i class="fas fa-plus-circle"></i> Yeni Sponsor Ekle</h4>
+            <div id="addSponsorForm">
+                <div class="form-group">
+                    <label for="newSponsorName"><i class="fas fa-signature"></i> Mekan Adı:</label>
+                    <input type="text" id="newSponsorName" placeholder="Mekan adını girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="newSponsorAddress"><i class="fas fa-map-marker-alt"></i> Adres:</label>
+                    <input type="text" id="newSponsorAddress" placeholder="Mekan adresini girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="newSponsorProduct"><i class="fas fa-fire"></i> Popüler Ürün:</label>
+                    <input type="text" id="newSponsorProduct" placeholder="Örn: Cold Brew Kahve" required>
+                </div>
+                <div class="form-group">
+                    <label for="newSponsorIntensity"><i class="fas fa-users"></i> Yoğunluk:</label>
+                    <input type="text" id="newSponsorIntensity" placeholder="Örn: Hafta sonları yoğun" required>
+                </div>
+                <button id="addSponsorBtn"><i class="fas fa-plus"></i> Sponsor Mekan Ekle</button>
+                <div id="addSponsorMessage" class="message hidden"></div>
+            </div>
+
+            <h4><i class="fas fa-list"></i> Mevcut Sponsorlar:</h4>
+            <div id="currentSponsorsList">
+                <p class="placeholder-message">Henüz kayıtlı sponsor mekan yok.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="manageAdminUsersModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" data-modal="manageAdminUsersModal">&times;</span>
+            <h3><i class="fas fa-user-shield"></i> Kafe Adminlerini Yönet</h3>
+
+            <h4><i class="fas fa-user-plus"></i> Yeni Admin Kullanıcı Oluştur</h4>
+            <div id="createAdminUserForm">
+                <div class="form-group">
+                    <label for="newAdminUsername"><i class="fas fa-user-tie"></i> Kullanıcı Adı:</label>
+                    <input type="text" id="newAdminUsername" placeholder="Yeni admin kullanıcı adı" required>
+                </div>
+                <div class="form-group">
+                    <label for="newAdminPassword"><i class="fas fa-lock"></i> Şifre:</label>
+                    <input type="password" id="newAdminPassword" placeholder="Yeni admin şifresi" required>
+                </div>
+                <button id="createAdminUserBtn"><i class="fas fa-plus"></i> Admin Kullanıcı Oluştur</button>
+                <div id="createAdminUserMessage" class="message hidden"></div>
+            </div>
+
+            <h4><i class="fas fa-list-alt"></i> Mevcut Admin Kullanıcılar:</h4>
+            <div id="currentAdminUsersList">
+                <p class="placeholder-message">Henüz kayıtlı admin kullanıcı yok.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Global Değişkenler ---
+        let currentCustomer = null;
+        let codeTimerInterval = null;
+        let loadingProgress = 0;
+        let loadingInterval = null;
+        let editingSponsorId = null;
+        let editingAdminUsername = null; // Admin kullanıcı düzenleme için
+
+        const DEFAULT_ADMIN_USERNAME = 'admin'; // Sabit ana admin kullanıcı adı
+        const DEFAULT_ADMIN_PASSWORD = 'adminpass'; // Sabit ana admin şifresi
+
+        // --- Helper Fonksiyonları ---
+
+        /**
+         * Verilen paneli gösterir ve diğer tüm panelleri gizler.
+         * @param {string} panelId Gösterilecek panelin ID'si.
+         */
+        function showPanel(panelId) {
+            document.querySelectorAll('.container').forEach(panel => {
+                panel.classList.remove('active-panel');
+            });
+            document.getElementById(panelId).classList.add('active-panel');
+        }
+
+        /**
+         * Belirtilen elemente mesaj gösterir.
+         * @param {string} elementId Mesajın gösterileceği elementin ID'si.
+         * @param {string} message Gösterilecek mesaj metni.
+         * @param {'success'|'error'|'info'} type Mesajın tipi (stil için).
+         */
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.classList.remove('hidden', 'success', 'error', 'info', 'show');
+            element.classList.add(type);
+            element.classList.add('show');
+            setTimeout(() => {
+                element.classList.remove('show');
+                setTimeout(() => {
+                    element.classList.add('hidden');
+                    element.textContent = '';
+                }, 400); // CSS transition süresi kadar bekler
+            }, 3000);
+        }
+
+        /**
+         * Belirtilen modalı açar.
+         * @param {string} modalId Açılacak modalın ID'si.
+         */
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        /**
+         * Belirtilen modalı kapatır.
+         * @param {string} modalId Kapatılacak modalın ID'si.
+         */
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        /**
+         * Uygulama başlığının durumunu ayarlar (büyük, küçük, gizli).
+         * @param {'initial'|'small'|'hidden'} state Başlığın durumu.
+         */
+        function setAppTitleState(state) {
+            const appTitle = document.getElementById('appTitle');
+            appTitle.classList.remove('initial', 'small', 'hidden', 'visible');
+
+            if (state === 'initial') {
+                appTitle.classList.add('initial', 'visible');
+                appTitle.style.pointerEvents = 'none';
+            } else if (state === 'small') {
+                appTitle.classList.add('small', 'visible');
+                appTitle.style.pointerEvents = 'auto';
+            } else if (state === 'hidden') {
+                appTitle.classList.add('hidden');
+                appTitle.style.pointerEvents = 'none';
+            }
+        }
+
+        // --- Veri Yönetimi (LocalStorage) ---
+
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('users')) || {};
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function getCafeSettings() {
+            return JSON.parse(localStorage.getItem('cafeSettings')) || {
+                rewardStars: 7,
+                rewardDescription: "Ücretsiz Orta Boy Filtre Kahve"
+            };
+        }
+
+        function saveCafeSettings(settings) {
+            localStorage.setItem('cafeSettings', JSON.stringify(settings));
+        }
+
+        function getValidCodes() {
+            const codes = JSON.parse(localStorage.getItem('validCodes')) || {};
+            const now = Date.now();
+            const filteredCodes = {};
+            for (const code in codes) {
+                if (codes[code].expiry > now && !codes[code].usedBy) {
+                    filteredCodes[code] = codes[code];
+                }
+            }
+            localStorage.setItem('validCodes', JSON.stringify(filteredCodes));
+            return filteredCodes;
+        }
+
+        function saveValidCodes(codes) {
+            localStorage.setItem('validCodes', JSON.stringify(codes));
+        }
+
+        function getSponsors() {
+            return JSON.parse(localStorage.getItem('sponsors')) || [];
+        }
+
+        function saveSponsors(sponsors) {
+            localStorage.setItem('sponsors', JSON.stringify(sponsors));
+        }
+
+        function getAdminUsers() {
+            const adminUsers = JSON.parse(localStorage.getItem('adminUsers')) || {};
+            // Varsayılan admin kullanıcısını ekle veya güncelle
+            if (!adminUsers[DEFAULT_ADMIN_USERNAME]) {
+                adminUsers[DEFAULT_ADMIN_USERNAME] = { password: DEFAULT_ADMIN_PASSWORD };
+                localStorage.setItem('adminUsers', JSON.stringify(adminUsers));
+            }
+            return adminUsers;
+        }
+
+        function saveAdminUsers(adminUsers) {
+            localStorage.setItem('adminUsers', JSON.stringify(adminUsers));
+        }
+
+
+        // --- Müşteri İşlemleri ---
+
+        /**
+         * Müşteri girişini işler.
+         */
+        function handleCustomerLogin() {
+            const username = document.getElementById('customerUsername').value.trim();
+            const password = document.getElementById('customerPassword').value.trim();
+            const messageElementId = 'customerLoginMessage';
+
+            if (!username || !password) {
+                 showMessage(messageElementId, 'Lütfen kullanıcı adı ve şifre girin.', 'error');
+                 return;
+            }
+
+            const users = getUsers();
+            if (users[username] && users[username].password === password) {
+                currentCustomer = username;
+                localStorage.setItem('lastLoggedInUser', username);
+                updateCustomerPanel();
+                showPanel('customerPanel');
+                setAppTitleState('small');
+                // Otomatik olarak "Genel Bakış" sekmesini seç
+                activateCustomerTab('tabOverview');
+                showMessage(messageElementId, `Hoş geldiniz, ${users[username].fullName || username}!`, 'success');
+            } else {
+                showMessage(messageElementId, 'Kullanıcı adı veya şifre yanlış!', 'error');
+            }
+        }
+
+        /**
+         * Müşteri kaydını işler.
+         */
+        function handleCustomerRegister() {
+            const fullName = document.getElementById('customerFullName').value.trim();
+            const username = document.getElementById('customerRegisterUsername').value.trim();
+            const password = document.getElementById('customerRegisterPassword').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const messageElementId = 'customerRegisterMessage';
+
+            if (!fullName || !username || !password || !email || !phone) {
+                showMessage(messageElementId, 'Tüm alanları doldurmanız zorunludur!', 'error');
+                return;
+            }
+            if (!/^\d{3}-\d{3}-\d{2}-\d{2}$/.test(phone)) {
+                 showMessage(messageElementId, 'Telefon numarası formatı geçersiz! (örn: 5xx-xxx-xx-xx)', 'error');
+                 return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showMessage(messageElementId, 'Geçersiz e-posta formatı!', 'error');
+                return;
+            }
+
+            const users = getUsers();
+            if (users[username]) {
+                showMessage(messageElementId, 'Bu kullanıcı adı zaten mevcut!', 'error');
+            } else {
+                users[username] = {
+                    fullName: fullName,
+                    password: password,
+                    email: email,
+                    phone: phone,
+                    stars: 0,
+                    orders: []
+                };
+                saveUsers(users);
+                showMessage(messageElementId, 'Kayıt başarılı! Şimdi giriş yapabilirsiniz.', 'success');
+                document.getElementById('customerFullName').value = '';
+                document.getElementById('customerRegisterUsername').value = '';
+                document.getElementById('customerRegisterPassword').value = '';
+                document.getElementById('customerEmail').value = '';
+                document.getElementById('customerPhone').value = '';
+
+                setTimeout(() => {
+                    showPanel('customerLoginSection');
+                    document.getElementById('customerUsername').value = username;
+                }, 1500);
+            }
+        }
+
+        /**
+         * Müşteri paneli bilgilerini günceller.
+         */
+        function updateCustomerPanel() {
+            if (!currentCustomer) return;
+            const users = getUsers();
+            const user = users[currentCustomer];
+            const cafeSettings = getCafeSettings();
+            const requestRewardBtn = document.getElementById('requestRewardBtn');
+
+            document.getElementById('currentCustomerFullName').textContent = user.fullName || currentCustomer;
+            document.getElementById('customerStars').textContent = user.stars;
+
+            let starsNeededForReward = cafeSettings.rewardStars;
+            let currentStars = user.stars;
+            let remainingStars = (starsNeededForReward - (currentStars % starsNeededForReward)) % starsNeededForReward;
+
+            if (currentStars >= starsNeededForReward) {
+                 document.getElementById('nextRewardInfo').innerHTML = `Tebrikler! Bir hediye içecek kazanmaya hak kazandınız! <i class="fas fa-gift"></i>`;
+                 requestRewardBtn.classList.remove('hidden');
+                 requestRewardBtn.disabled = false;
+            } else {
+                 document.getElementById('nextRewardInfo').innerHTML = `Bir sonraki ödül için <strong>${remainingStars}</strong> yıldızınız kaldı.`;
+                 requestRewardBtn.classList.add('hidden');
+                 requestRewardBtn.disabled = true;
+            }
+
+            document.getElementById('cafeRewardInfo').innerHTML = `<strong>Ödül Detayı:</strong> ${cafeSettings.rewardStars} yıldız = <span>${cafeSettings.rewardDescription}</span>`;
+
+            // Tab içeriklerini de güncelle
+            loadPersonalInfoTabContent();
+            loadSponsorPlacesTabContent();
+            loadMyPlacesTabContent();
+        }
+
+        /**
+         * Yıldız kodu uygulama işlemini yönetir.
+         */
+        function handleApplyStarCode() {
+            const starCodeInput = document.getElementById('starCode');
+            const code = starCodeInput.value.trim().toUpperCase();
+            const messageElementId = 'starCodeMessage';
+            const users = getUsers();
+            const validCodes = getValidCodes();
+
+            if (!currentCustomer) {
+                showMessage(messageElementId, 'Lütfen önce giriş yapın.', 'error');
+                return;
+            }
+
+            if (!code) {
+                showMessage(messageElementId, 'Lütfen bir kod girin.', 'error');
+                return;
+            }
+
+            if (validCodes[code]) {
+                if (validCodes[code].usedBy) {
+                    showMessage(messageElementId, 'Bu kod zaten kullanılmış!', 'error');
+                } else if (validCodes[code].expiry < Date.now()) {
+                     showMessage(messageElementId, 'Bu kodun süresi doldu!', 'error');
+                     delete validCodes[code];
+                     saveValidCodes(validCodes);
+                }
+                else {
+                    users[currentCustomer].stars = (users[currentCustomer].stars || 0) + 1;
+                    validCodes[code].usedBy = currentCustomer;
+                    users[currentCustomer].orders.push({
+                        type: "Yıldız Kazanma",
+                        item: "Kahve",
+                        place: "Sponsor Kafe", // Burası dinamikleşebilir, şimdilik sabit
+                        date: Date.now(),
+                        starsChange: 1
+                    });
+                    saveUsers(users);
+                    saveValidCodes(validCodes);
+                    updateCustomerPanel();
+                    showMessage(messageElementId, `1 yıldız kazandınız! Toplam yıldızınız: ${users[currentCustomer].stars} ⭐`, 'success');
+                    starCodeInput.value = '';
+                }
+            } else {
+                showMessage(messageElementId, 'Geçersiz veya süresi dolmuş kod!', 'error');
+            }
+        }
+
+        /**
+         * Ödül talep etme işlemini yönetir.
+         */
+        function handleRequestReward() {
+            const users = getUsers();
+            const user = users[currentCustomer];
+            const cafeSettings = getCafeSettings();
+            const messageElementId = 'rewardRequestMessage';
+
+            if (!user || user.stars < cafeSettings.rewardStars) {
+                showMessage(messageElementId, 'Yeterli yıldızınız yok!', 'error');
+                return;
+            }
+
+            const confirmReward = confirm(`"${cafeSettings.rewardDescription}" ödülünü talep etmek istediğinize emin misiniz? ${cafeSettings.rewardStars} yıldızınız düşülecektir.`);
+            if (!confirmReward) {
+                showMessage(messageElementId, 'Ödül talebi iptal edildi.', 'info');
+                return;
+            }
+
+            user.stars -= cafeSettings.rewardStars;
+            user.orders.push({
+                type: "Ödül Kullanımı",
+                item: cafeSettings.rewardDescription,
+                place: "Sponsor Kafe", // Burası dinamikleşebilir, şimdilik sabit
+                date: Date.now(),
+                starsChange: -cafeSettings.rewardStars
+            });
+            saveUsers(users);
+            updateCustomerPanel();
+            showMessage(messageElementId, `Tebrikler! ${cafeSettings.rewardDescription} ödülünüzü talep ettiniz. Yıldızlarınız güncellendi.`, 'success');
+        }
+
+        /**
+         * Kişisel Bilgiler tab içeriğini yükler.
+         */
+        function loadPersonalInfoTabContent() {
+            if (!currentCustomer) return;
+            const users = getUsers();
+            const user = users[currentCustomer];
+            document.getElementById('tabPersonalInfoFullName').textContent = user.fullName || 'Bilgi Yok';
+            document.getElementById('tabPersonalInfoUsername').textContent = currentCustomer;
+            document.getElementById('tabPersonalInfoEmail').textContent = user.email || 'Bilgi Yok';
+            document.getElementById('tabPersonalInfoPhone').textContent = user.phone || 'Bilgi Yok';
+        }
+
+        /**
+         * Kişisel bilgileri düzenleme modalını yükler.
+         */
+        function loadEditPersonalInfoModal() {
+            if (!currentCustomer) return;
+            const users = getUsers();
+            const user = users[currentCustomer];
+            document.getElementById('editFullName').value = user.fullName || '';
+            document.getElementById('editEmail').value = user.email || '';
+            document.getElementById('editPhone').value = user.phone || '';
+        }
+
+        /**
+         * Kişisel bilgileri kaydeder.
+         */
+        function handleSavePersonalInfo() {
+            if (!currentCustomer) return;
+            const users = getUsers();
+            const user = users[currentCustomer];
+
+            const newFullName = document.getElementById('editFullName').value.trim();
+            const newEmail = document.getElementById('editEmail').value.trim();
+            const newPhone = document.getElementById('editPhone').value.trim();
+            const messageElementId = 'editPersonalInfoMessage';
+
+            if (!newFullName || !newEmail || !newPhone) {
+                showMessage(messageElementId, 'Tüm alanları doldurmanız zorunludur!', 'error');
+                return;
+            }
+             if (!/^\d{3}-\d{3}-\d{2}-\d{2}$/.test(newPhone)) {
+                 showMessage(messageElementId, 'Telefon numarası formatı geçersiz! (örn: 5xx-xxx-xx-xx)', 'error');
+                 return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+                showMessage(messageElementId, 'Geçersiz e-posta formatı!', 'error');
+                return;
+            }
+
+            user.fullName = newFullName;
+            user.email = newEmail;
+            user.phone = newPhone;
+            saveUsers(users);
+
+            showMessage(messageElementId, 'Bilgileriniz başarıyla güncellendi!', 'success');
+            loadPersonalInfoTabContent(); // Tab içeriğini de güncelle
+            updateCustomerPanel(); // Ana paneli de güncelle
+            setTimeout(() => {
+                closeModal('editPersonalInfoModal');
+                // Bilgilerim sekmesinde mesaj göster
+                showMessage('editPersonalInfoMessageInTab', 'Bilgileriniz güncellendi.', 'success');
+            }, 1500);
+        }
+
+        /**
+         * Sponsor Mekanları tab içeriğini yükler (Müşteri için).
+         */
+        function loadSponsorPlacesTabContent() {
+            const tabSponsorPlacesList = document.getElementById('tabSponsorPlacesList');
+            tabSponsorPlacesList.innerHTML = '';
+            const sponsors = getSponsors();
+
+            if (sponsors.length > 0) {
+                sponsors.forEach(sponsor => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add('location-item');
+                    listItem.innerHTML = `
+                        <span><strong><i class="fas fa-coffee"></i> ${sponsor.name}</strong></span>
+                        <div class="details">
+                            <i class="fas fa-map-marker-alt"></i> Adres: ${sponsor.address}<br>
+                            <i class="fas fa-fire"></i> Popüler Ürün: ${sponsor.product}<br>
+                            <i class="fas fa-users"></i> Yoğunluk: ${sponsor.intensity}
+                        </div>
+                    `;
+                    tabSponsorPlacesList.appendChild(listItem);
+                });
+            } else {
+                tabSponsorPlacesList.innerHTML = '<p class="placeholder-message">Henüz kayıtlı sponsor mekanımız bulunmamaktadır.</p>';
+            }
+        }
+
+
+        /**
+         * Gittiğim Mekanlar tab içeriğini yükler.
+         */
+        function loadMyPlacesTabContent() {
+            const users = getUsers();
+            const user = users[currentCustomer];
+            const tabMyPlacesOrderHistory = document.getElementById('tabMyPlacesOrderHistory');
+            tabMyPlacesOrderHistory.innerHTML = '';
+
+            if (user.orders && user.orders.length > 0) {
+                const sortedOrders = [...user.orders].sort((a, b) => b.date - a.date);
+
+                sortedOrders.forEach(order => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add('order-item');
+                    const orderDate = new Date(order.date);
+                    const formattedDate = orderDate.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    const formattedTime = orderDate.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+                    let starsHtml = '';
+                    let itemIcon = '';
+                    if (order.starsChange > 0) {
+                        starsHtml = `<span style="color:var(--success-color);"><i class="fas fa-plus-circle"></i> +${order.starsChange} Yıldız</span>`;
+                        itemIcon = '<i class="fas fa-coffee"></i>';
+                    } else if (order.starsChange < 0) {
+                        starsHtml = `<span style="color:var(--error-color);"><i class="fas fa-minus-circle"></i> ${order.starsChange} Yıldız</span>`;
+                        itemIcon = '<i class="fas fa-gift"></i>';
+                    } else {
+                        starsHtml = `<span style="color:var(--text-light);"><i class="fas fa-star"></i> ${order.starsChange} Yıldız</span>`;
+                    }
+
+
+                    listItem.innerHTML = `
+                        <span>${itemIcon} <strong>${order.item}</strong></span>
+                        <div class="details">
+                            <i class="fas fa-store"></i> Mekan: ${order.place}<br>
+                            <i class="fas fa-calendar-alt"></i> Tarih: ${formattedDate} ${formattedTime}<br>
+                            <i class="fas fa-star"></i> Yıldız Durumu: ${starsHtml}
+                        </div>
+                    `;
+                    tabMyPlacesOrderHistory.appendChild(listItem);
+                });
+            } else {
+                tabMyPlacesOrderHistory.innerHTML = '<p class="placeholder-message">Henüz ziyaret ettiğiniz bir mekan veya yıldız işleminiz yok.</p>';
+            }
+        }
+
+        /**
+         * Müşteri panelindeki tab'ı etkinleştirir.
+         * @param {string} tabButtonId Etkinleştirilecek tab butonunun ID'si.
+         */
+        function activateCustomerTab(tabButtonId) {
+            document.querySelectorAll('.customer-tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabButtonId).classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            const contentId = document.getElementById(tabButtonId).dataset.tabContent;
+            document.getElementById(contentId).classList.add('active');
+
+            // Tab içeriği değiştiğinde ilgili bilgileri yükle
+            if (contentId === 'personalInfoContent') {
+                loadPersonalInfoTabContent();
+            } else if (contentId === 'sponsorPlacesContent') {
+                loadSponsorPlacesTabContent();
+            } else if (contentId === 'myPlacesContent') {
+                loadMyPlacesTabContent();
+            }
+        }
+
+
+        // --- Kafe Sahibi İşlemleri ---
+
+        /**
+         * Kafe sahibi girişini işler.
+         */
+        function handleOwnerLogin() {
+            const username = document.getElementById('ownerUsername').value.trim();
+            const password = document.getElementById('ownerPassword').value.trim();
+            const messageElementId = 'ownerLoginMessage';
+
+            const adminUsers = getAdminUsers();
+
+            if (adminUsers[username] && adminUsers[username].password === password) {
+                updateOwnerPanel();
+                showPanel('cafeOwnerPanel');
+                setAppTitleState('small');
+                showMessage(messageElementId, 'Giriş başarılı! Hoş geldiniz.', 'success');
+            } else {
+                showMessage(messageElementId, 'Kullanıcı adı veya şifre yanlış!', 'error');
+            }
+        }
+
+        /**
+         * Ödül ayarlarını kaydeder.
+         */
+        function handleSaveReward() {
+            const rewardStars = parseInt(document.getElementById('rewardStars').value);
+            const rewardDescription = document.getElementById('rewardDescription').value.trim();
+            const messageElementId = 'rewardSaveMessage';
+
+            if (isNaN(rewardStars) || rewardStars <= 0 || !rewardDescription) {
+                showMessage(messageElementId, 'Lütfen geçerli yıldız sayısı ve ödül açıklaması girin.', 'error');
+                return;
+            }
+
+            const settings = getCafeSettings();
+            settings.rewardStars = rewardStars;
+            settings.rewardDescription = rewardDescription;
+            saveCafeSettings(settings);
+            showMessage(messageElementId, 'Ödül ayarları başarıyla kaydedildi!', 'success');
+            if (currentCustomer) {
+                updateCustomerPanel(); // Müşteri panelini de güncelle
+            }
+        }
+
+        /**
+         * Yeni müşteri kodu oluşturur.
+         */
+        function handleGenerateCode() {
+            clearInterval(codeTimerInterval);
+
+            const newCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+            const expiryTime = Date.now() + 120 * 1000; // 2 dakika (120 saniye)
+
+            const validCodes = getValidCodes();
+            validCodes[newCode] = { expiry: expiryTime, usedBy: null };
+            saveValidCodes(validCodes);
+
+            const codeDisplay = document.getElementById('generatedCodeDisplay');
+            const timerDisplay = document.getElementById('generatedCodeTimer');
+            codeDisplay.textContent = newCode;
+            codeDisplay.classList.remove('hidden');
+            timerDisplay.textContent = 'Kalan Süre: 120 saniye';
+            timerDisplay.style.color = '#FF7043';
+
+            let timeLeft = 120;
+            codeTimerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(codeTimerInterval);
+                    timerDisplay.textContent = 'Kodun süresi doldu!';
+                    timerDisplay.style.color = '#F44336';
+                    codeDisplay.classList.add('hidden');
+                } else {
+                    timerDisplay.textContent = 'Kalan Süre: ' + timeLeft + ' saniye';
+                    if (timeLeft <= 10) {
+                        timerDisplay.style.color = '#D81B60';
+                    } else if (timeLeft <= 30) {
+                        timerDisplay.style.color = '#FFC107';
+                    }
+                }
+            }, 1000);
+
+            showMessage('codeGenerationMessage', 'Yeni kod oluşturuldu! 2 dakika içinde kullanın.', 'success');
+        }
+
+        /**
+         * Kafe sahibi paneli bilgilerini günceller.
+         */
+        function updateOwnerPanel() {
+            const cafeSettings = getCafeSettings();
+            document.getElementById('rewardStars').value = cafeSettings.rewardStars;
+            document.getElementById('rewardDescription').value = cafeSettings.rewardDescription;
+
+            const users = getUsers();
+            const totalCustomers = Object.keys(users).length;
+            document.getElementById('totalCustomersCount').textContent = totalCustomers;
+
+            const topCustomersList = document.getElementById('topCustomersList');
+            topCustomersList.innerHTML = '';
+
+            if (totalCustomers === 0) {
+                topCustomersList.innerHTML = '<p class="placeholder-message">Henüz kayıtlı müşteri yok.</p>';
+            } else {
+                const sortedCustomers = Object.entries(users).sort(([, a], [, b]) => b.stars - a.stars);
+
+                sortedCustomers.forEach(([username, data]) => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add('customer-list-item');
+                    listItem.innerHTML = `
+                        <span><i class="fas fa-user-circle"></i> ${data.fullName || username}</span>
+                        <span>${data.stars} ⭐</span>
+                    `;
+                    topCustomersList.appendChild(listItem);
+                });
+            }
+            renderSponsorsList(); // Sponsor listesini güncelle
+            renderAdminUsersList(); // Admin kullanıcı listesini güncelle
+        }
+
+        /**
+         * Yeni sponsor ekler veya düzenler.
+         */
+        function handleAddEditSponsor() {
+            const name = document.getElementById('newSponsorName').value.trim();
+            const address = document.getElementById('newSponsorAddress').value.trim();
+            const product = document.getElementById('newSponsorProduct').value.trim();
+            const intensity = document.getElementById('newSponsorIntensity').value.trim();
+            const messageElementId = 'addSponsorMessage';
+            const sponsors = getSponsors();
+
+            if (!name || !address || !product || !intensity) {
+                showMessage(messageElementId, 'Tüm sponsor alanlarını doldurmanız zorunludur!', 'error');
+                return;
+            }
+
+            if (editingSponsorId !== null) {
+                // Düzenleme işlemi
+                const index = sponsors.findIndex(s => s.id === editingSponsorId);
+                if (index !== -1) {
+                    sponsors[index] = { id: editingSponsorId, name, address, product, intensity };
+                    showMessage(messageElementId, 'Sponsor başarıyla güncellendi!', 'success');
+                }
+                editingSponsorId = null; // Düzenleme modunu kapat
+                document.getElementById('addSponsorBtn').innerHTML = '<i class="fas fa-save"></i> Sponsoru Güncelle';
+            } else {
+                // Yeni ekleme işlemi
+                const newId = Date.now(); // Basit bir ID
+                sponsors.push({ id: newId, name, address, product, intensity });
+                showMessage(messageElementId, 'Yeni sponsor başarıyla eklendi!', 'success');
+            }
+
+            saveSponsors(sponsors);
+            renderSponsorsList();
+            document.getElementById('newSponsorName').value = '';
+            document.getElementById('newSponsorAddress').value = '';
+            document.getElementById('newSponsorProduct').value = '';
+            document.getElementById('newSponsorIntensity').value = '';
+        }
+
+        /**
+         * Sponsor düzenleme alanını doldurur.
+         * @param {string} id Düzenlenecek sponsorun ID'si.
+         */
+        function editSponsor(id) {
+            const sponsors = getSponsors();
+            const sponsorToEdit = sponsors.find(s => s.id === id);
+
+            if (sponsorToEdit) {
+                document.getElementById('newSponsorName').value = sponsorToEdit.name;
+                document.getElementById('newSponsorAddress').value = sponsorToEdit.address;
+                document.getElementById('newSponsorProduct').value = sponsorToEdit.product;
+                document.getElementById('newSponsorIntensity').value = sponsorToEdit.intensity;
+                editingSponsorId = id; // Düzenleme modunu ayarla
+                document.getElementById('addSponsorBtn').innerHTML = '<i class="fas fa-save"></i> Sponsoru Güncelle';
+                document.getElementById('addSponsorMessage').classList.add('hidden'); // Mesajı gizle
+            }
+        }
+
+        /**
+         * Sponsoru siler.
+         * @param {string} id Silinecek sponsorun ID'si.
+         */
+        function deleteSponsor(id) {
+            if (confirm('Bu sponsoru silmek istediğinizden emin misiniz?')) {
+                let sponsors = getSponsors();
+                sponsors = sponsors.filter(s => s.id !== id);
+                saveSponsors(sponsors);
+                renderSponsorsList();
+                showMessage('addSponsorMessage', 'Sponsor başarıyla silindi!', 'success');
+            }
+        }
+
+        /**
+         * Sponsor listesini modalda render eder.
+         */
+        function renderSponsorsList() {
+            const currentSponsorsList = document.getElementById('currentSponsorsList');
+            currentSponsorsList.innerHTML = '';
+            const sponsors = getSponsors();
+
+            if (sponsors.length === 0) {
+                currentSponsorsList.innerHTML = '<p class="placeholder-message">Henüz kayıtlı sponsor mekan yok.</p>';
+            } else {
+                sponsors.forEach(sponsor => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add('sponsor-item');
+                    listItem.innerHTML = `
+                        <div class="sponsor-info">
+                            <strong><i class="fas fa-coffee"></i> ${sponsor.name}</strong>
+                            <span class="details">
+                                <i class="fas fa-map-marker-alt"></i> Adres: ${sponsor.address}
+                            </span>
+                            <span class="details">
+                                <i class="fas fa-fire"></i> Popüler Ürün: ${sponsor.product}
+                            </span>
+                             <span class="details">
+                                <i class="fas fa-users"></i> Yoğunluk: ${sponsor.intensity}
+                            </span>
+                        </div>
+                        <div class="sponsor-actions">
+                            <button class="edit-btn btn-small info" data-id="${sponsor.id}"><i class="fas fa-edit"></i> Düzenle</button>
+                            <button class="delete-btn btn-small error" data-id="${sponsor.id}"><i class="fas fa-trash-alt"></i> Sil</button>
+                        </div>
+                    `;
+                    currentSponsorsList.appendChild(listItem);
+                });
+
+                // Dinamik olarak oluşturulan butonlara event listener ekle
+                currentSponsorsList.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => editSponsor(parseInt(e.target.dataset.id)));
+                });
+                currentSponsorsList.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteSponsor(parseInt(e.target.dataset.id)));
+                });
+            }
+        }
+
+        /**
+         * Yeni admin kullanıcı oluşturur veya mevcut admin kullanıcısını günceller.
+         */
+        function handleCreateEditAdminUser() {
+            const newAdminUsername = document.getElementById('newAdminUsername').value.trim();
+            const newAdminPassword = document.getElementById('newAdminPassword').value.trim();
+            const messageElementId = 'createAdminUserMessage';
+            const adminUsers = getAdminUsers();
+
+            if (!newAdminUsername || !newAdminPassword) {
+                showMessage(messageElementId, 'Kullanıcı adı ve şifre boş bırakılamaz!', 'error');
+                return;
+            }
+
+            if (newAdminUsername === DEFAULT_ADMIN_USERNAME) {
+                showMessage(messageElementId, `"${DEFAULT_ADMIN_USERNAME}" kullanıcı adı değiştirilemez veya silinemez.`, 'error');
+                return;
+            }
+
+            if (editingAdminUsername !== null) {
+                // Düzenleme işlemi
+                if (adminUsers[newAdminUsername] && newAdminUsername !== editingAdminUsername) {
+                    showMessage(messageElementId, 'Bu kullanıcı adı zaten mevcut!', 'error');
+                    return;
+                }
+                if (editingAdminUsername !== newAdminUsername) {
+                    // Kullanıcı adı değiştiyse eskisi silinip yenisi eklenmeli
+                    delete adminUsers[editingAdminUsername];
+                }
+                adminUsers[newAdminUsername] = { password: newAdminPassword };
+                showMessage(messageElementId, `Admin kullanıcı "${newAdminUsername}" başarıyla güncellendi!`, 'success');
+                editingAdminUsername = null;
+                document.getElementById('createAdminUserBtn').innerHTML = '<i class="fas fa-plus"></i> Admin Kullanıcı Oluştur';
+            } else {
+                // Yeni ekleme işlemi
+                if (adminUsers[newAdminUsername]) {
+                    showMessage(messageElementId, 'Bu kullanıcı adı zaten mevcut!', 'error');
+                    return;
+                }
+                adminUsers[newAdminUsername] = { password: newAdminPassword };
+                showMessage(messageElementId, `Admin kullanıcı "${newAdminUsername}" başarıyla oluşturuldu!`, 'success');
+            }
+
+            saveAdminUsers(adminUsers);
+            renderAdminUsersList();
+            document.getElementById('newAdminUsername').value = '';
+            document.getElementById('newAdminPassword').value = '';
+        }
+
+        /**
+         * Admin kullanıcı düzenleme alanını doldurur.
+         * @param {string} username Düzenlenecek admin kullanıcının adı.
+         */
+        function editAdminUser(username) {
+            const adminUsers = getAdminUsers();
+            const userToEdit = adminUsers[username];
+
+            if (username === DEFAULT_ADMIN_USERNAME) {
+                showMessage('createAdminUserMessage', `Ana admin kullanıcısı "${DEFAULT_ADMIN_USERNAME}" düzenlenemez.`, 'error');
+                return;
+            }
+
+            if (userToEdit) {
+                document.getElementById('newAdminUsername').value = username;
+                document.getElementById('newAdminPassword').value = userToEdit.password;
+                editingAdminUsername = username;
+                document.getElementById('createAdminUserBtn').innerHTML = '<i class="fas fa-save"></i> Admin Kullanıcıyı Güncelle';
+                document.getElementById('createAdminUserMessage').classList.add('hidden');
+            }
+        }
+
+        /**
+         * Admin kullanıcısını siler.
+         * @param {string} username Silinecek admin kullanıcının adı.
+         */
+        function deleteAdminUser(username) {
+            if (username === DEFAULT_ADMIN_USERNAME) {
+                showMessage('createAdminUserMessage', `Ana admin kullanıcısı "${DEFAULT_ADMIN_USERNAME}" silinemez.`, 'error');
+                return;
+            }
+
+            if (confirm(`Admin kullanıcı "${username}" silmek istediğinizden emin misiniz?`)) {
+                const adminUsers = getAdminUsers();
+                delete adminUsers[username];
+                saveAdminUsers(adminUsers);
+                renderAdminUsersList();
+                showMessage('createAdminUserMessage', `Admin kullanıcı "${username}" başarıyla silindi!`, 'success');
+            }
+        }
+
+        /**
+         * Admin kullanıcı listesini modalda render eder.
+         */
+        function renderAdminUsersList() {
+            const currentAdminUsersList = document.getElementById('currentAdminUsersList');
+            currentAdminUsersList.innerHTML = '';
+            const adminUsers = getAdminUsers(); // getAdminUsers fonksiyonu default admini de getirecek
+
+            const usersArray = Object.keys(adminUsers).map(username => ({ username: username, password: adminUsers[username].password }));
+
+            if (usersArray.length === 0) {
+                currentAdminUsersList.innerHTML = '<p class="placeholder-message">Henüz kayıtlı admin kullanıcı yok.</p>';
+            } else {
+                usersArray.forEach(user => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add('admin-user-item');
+                    listItem.innerHTML = `
+                        <div class="user-info">
+                            <strong><i class="fas fa-user-shield"></i> Kullanıcı Adı: ${user.username}</strong>
+                            <span class="details">
+                                <i class="fas fa-key"></i> Şifre: *********
+                            </span>
+                        </div>
+                        <div class="user-actions">
+                            <button class="edit-btn btn-small info" data-username="${user.username}"><i class="fas fa-edit"></i> Düzenle</button>
+                            <button class="delete-btn btn-small error" data-username="${user.username}" ${user.username === DEFAULT_ADMIN_USERNAME ? 'disabled' : ''}><i class="fas fa-trash-alt"></i> Sil</button>
+                        </div>
+                    `;
+                    currentAdminUsersList.appendChild(listItem);
+                });
+
+                currentAdminUsersList.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', (e) => editAdminUser(e.target.dataset.username));
+                });
+                currentAdminUsersList.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteAdminUser(e.target.dataset.username));
+                });
+            }
+        }
+
+
+        // --- Olay Dinleyicileri ve Başlangıç Durumu ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const appTitle = document.getElementById('appTitle');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const loadingBar = document.getElementById('loadingBar');
+
+            // Admin kullanıcıları başlangıçta yükle (default adminin oluşması için)
+            getAdminUsers();
+
+            // --- Yükleme Barı Animasyonu ---
+            loadingProgress = 0;
+            loadingBar.style.width = '0%';
+            loadingInterval = setInterval(() => {
+                loadingProgress += 5;
+                if (loadingProgress >= 100) {
+                    clearInterval(loadingInterval);
+                    loadingBar.style.width = '100%';
+                    setTimeout(() => {
+                        loadingBar.style.opacity = '0';
+                        setTimeout(() => loadingBar.style.display = 'none', 300);
+                    }, 200);
+                } else {
+                    loadingBar.style.width = loadingProgress + '%';
+                }
+            }, 10);
+
+            // Spinner ve başlık animasyonunu başlat
+            setTimeout(() => {
+                appTitle.classList.add('visible');
+            }, 200);
+
+            // Panellerin ve ana ekranın gösterilmesi için gecikme
+            setTimeout(() => {
+                loadingSpinner.classList.add('hidden');
+
+                const lastLoggedInUser = localStorage.getItem('lastLoggedInUser');
+                if (lastLoggedInUser) {
+                    const users = getUsers();
+                    if (users[lastLoggedInUser]) {
+                        currentCustomer = lastLoggedInUser;
+                        updateCustomerPanel();
+                        showPanel('customerPanel');
+                        setAppTitleState('small');
+                        activateCustomerTab('tabOverview');
+                    } else {
+                        localStorage.removeItem('lastLoggedInUser');
+                        showPanel('customerLoginSection');
+                        setAppTitleState('small');
+                    }
+                } else {
+                    showPanel('customerLoginSection');
+                    setAppTitleState('small');
+                }
+            }, 1500);
+
+
+            // --- Buton Olay Dinleyicileri ---
+
+            // Müşteri Giriş/Kayıt Butonları
+            document.getElementById('customerLoginBtn').addEventListener('click', handleCustomerLogin);
+            document.getElementById('showCustomerRegisterBtn').addEventListener('click', () => showPanel('customerRegisterSection'));
+            document.getElementById('customerRegisterBtn').addEventListener('click', handleCustomerRegister);
+            document.getElementById('backToCustomerLoginBtn').addEventListener('click', () => showPanel('customerLoginSection'));
+
+            // Müşteri Paneli Butonları
+            document.getElementById('customerLogoutBtn').addEventListener('click', () => {
+                currentCustomer = null;
+                localStorage.removeItem('lastLoggedInUser');
+                // Form alanlarını temizle
+                document.getElementById('customerUsername').value = '';
+                document.getElementById('customerPassword').value = '';
+                document.getElementById('customerFullName').value = '';
+                document.getElementById('customerRegisterUsername').value = '';
+                document.getElementById('customerRegisterPassword').value = '';
+                document.getElementById('customerEmail').value = '';
+                document.getElementById('customerPhone').value = '';
+
+                showPanel('customerLoginSection');
+                setAppTitleState('small');
+            });
+
+            document.getElementById('applyStarCodeBtn').addEventListener('click', handleApplyStarCode);
+            document.getElementById('requestRewardBtn').addEventListener('click', handleRequestReward);
+
+
+            // Kafe Sahibi Butonları
+            document.getElementById('showCafeOwnerLoginBtn').addEventListener('click', () => {
+                showPanel('cafeOwnerLoginSection');
+                clearInterval(codeTimerInterval);
+                document.getElementById('generatedCodeDisplay').classList.add('hidden');
+                document.getElementById('generatedCodeTimer').textContent = '';
+                setAppTitleState('small');
+            });
+            document.getElementById('ownerLoginBtn').addEventListener('click', handleOwnerLogin);
+            document.getElementById('ownerLogoutBtn').addEventListener('click', () => {
+                clearInterval(codeTimerInterval);
+                document.getElementById('generatedCodeDisplay').classList.add('hidden');
+                document.getElementById('generatedCodeTimer').textContent = '';
+                document.getElementById('ownerUsername').value = '';
+                document.getElementById('ownerPassword').value = '';
+
+                showPanel('customerLoginSection');
+                setAppTitleState('small');
+            });
+            document.getElementById('backToCustomerLoginFromAdmin').addEventListener('click', () => {
+                showPanel('customerLoginSection');
+                setAppTitleState('small');
+            });
+
+            document.getElementById('saveRewardBtn').addEventListener('click', handleSaveReward);
+            document.getElementById('generateCodeBtn').addEventListener('click', handleGenerateCode);
+            document.getElementById('generatedCodeDisplay').addEventListener('click', async () => {
+                const code = document.getElementById('generatedCodeDisplay').textContent;
+                if (code) {
+                    try {
+                        await navigator.clipboard.writeText(code);
+                        showMessage('codeGenerationMessage', 'Kod kopyalandı! 📋', 'info');
+                    } catch (err) {
+                        console.error('Kopyalama başarısız:', err);
+                        showMessage('codeGenerationMessage', 'Kopyalama başarısız oldu.', 'error');
+                    }
+                }
+            });
+
+
+            // Müşteri paneli tab butonları ve modal butonu
+            document.getElementById('tabOverview').addEventListener('click', () => activateCustomerTab('tabOverview'));
+            document.getElementById('tabPersonalInfoBtn').addEventListener('click', () => activateCustomerTab('tabPersonalInfoBtn'));
+            document.getElementById('tabSponsorPlacesBtn').addEventListener('click', () => activateCustomerTab('tabSponsorPlacesBtn'));
+            document.getElementById('tabMyPlacesBtn').addEventListener('click', () => activateCustomerTab('tabMyPlacesBtn'));
+
+
+            // Bilgileri düzenle butonu ve kaydet (tab içeriğinden açılıyor)
+            document.getElementById('editPersonalInfoBtnInTab').addEventListener('click', () => {
+                loadEditPersonalInfoModal();
+                openModal('editPersonalInfoModal');
+            });
+            document.getElementById('savePersonalInfoBtn').addEventListener('click', handleSavePersonalInfo);
+
+            // Sponsor yönetimi butonu ve işlemleri (Admin paneli için)
+            document.getElementById('manageSponsorsBtn').addEventListener('click', () => {
+                renderSponsorsList();
+                openModal('manageSponsorsModal');
+            });
+            document.getElementById('addSponsorBtn').addEventListener('click', handleAddEditSponsor);
+
+            // Admin kullanıcıları yönet butonu ve işlemleri
+            document.getElementById('manageAdminUsersBtn').addEventListener('click', () => {
+                renderAdminUsersList();
+                openModal('manageAdminUsersModal');
+            });
+            document.getElementById('createAdminUserBtn').addEventListener('click', handleCreateEditAdminUser);
+
+
+            // Modal kapatma butonları (her modalın kendi 'close-button'ı için)
+            document.querySelectorAll('.close-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    closeModal(event.target.dataset.modal);
+                    // Sponsor yönetimi modalı kapanırken düzenleme modunu sıfırla
+                    if (event.target.dataset.modal === 'manageSponsorsModal') {
+                        editingSponsorId = null;
+                        document.getElementById('addSponsorBtn').innerHTML = '<i class="fas fa-plus"></i> Sponsor Mekan Ekle';
+                        document.getElementById('newSponsorName').value = '';
+                        document.getElementById('newSponsorAddress').value = '';
+                        document.getElementById('newSponsorProduct').value = '';
+                        document.getElementById('newSponsorIntensity').value = '';
+                        document.getElementById('addSponsorMessage').classList.add('hidden');
+                    }
+                    // Admin kullanıcı yönetimi modalı kapanırken düzenleme modunu sıfırla
+                    if (event.target.dataset.modal === 'manageAdminUsersModal') {
+                        editingAdminUsername = null;
+                        document.getElementById('createAdminUserBtn').innerHTML = '<i class="fas fa-plus"></i> Admin Kullanıcı Oluştur';
+                        document.getElementById('newAdminUsername').value = '';
+                        document.getElementById('newAdminPassword').value = '';
+                        document.getElementById('createAdminUserMessage').classList.add('hidden');
+                    }
+                });
+            });
+
+            // Modal dışına tıklayınca kapat (Modal açıkken body'ye click)
+            window.addEventListener('click', (event) => {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (event.target === modal) {
+                        closeModal(modal.id);
+                        // Sponsor yönetimi modalı kapanırken düzenleme modunu sıfırla
+                        if (modal.id === 'manageSponsorsModal') {
+                            editingSponsorId = null;
+                            document.getElementById('addSponsorBtn').innerHTML = '<i class="fas fa-plus"></i> Sponsor Mekan Ekle';
+                            document.getElementById('newSponsorName').value = '';
+                            document.getElementById('newSponsorAddress').value = '';
+                            document.getElementById('newSponsorProduct').value = '';
+                            document.getElementById('newSponsorIntensity').value = '';
+                            document.getElementById('addSponsorMessage').classList.add('hidden');
+                        }
+                        // Admin kullanıcı yönetimi modalı kapanırken düzenleme modunu sıfırla
+                        if (modal.id === 'manageAdminUsersModal') {
+                            editingAdminUsername = null;
+                            document.getElementById('createAdminUserBtn').innerHTML = '<i class="fas fa-plus"></i> Admin Kullanıcı Oluştur';
+                            document.getElementById('newAdminUsername').value = '';
+                            document.getElementById('newAdminPassword').value = '';
+                            document.getElementById('createAdminUserMessage').classList.add('hidden');
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
