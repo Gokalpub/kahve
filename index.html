@@ -974,6 +974,14 @@
             }
 
             /* Admin Paneli İçin Ek Düzenlemeler */
+            #cafeOwnerPanel .action-buttons-grid {
+                grid-template-columns: 1fr; /* Tek sütun */
+                gap: 20px;
+            }
+            #cafeOwnerPanel .action-buttons-grid button {
+                margin-top: 0; /* Grid içindeki butonlarda extra marjin olmasın */
+            }
+
             #cafeOwnerPanel .form-group {
                 margin-bottom: 25px;
             }
@@ -1023,6 +1031,33 @@
             .modal h3 {
                 font-size: 1.8em;
             }
+        }
+
+        /* Admin paneli butonlar için yeni grid */
+        .action-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* İki sütun */
+            gap: 25px; /* Butonlar arası boşluk */
+            margin-top: 35px;
+        }
+
+        .action-buttons-grid button {
+            margin-top: 0; /* Butonların kendi marjinini sıfırla, grid gap kullanılsın */
+            padding: 25px 20px; /* Butonların boyutunu artır */
+            font-size: 1.15em;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+         .action-buttons-grid button i {
+            font-size: 2.2em; /* İkon boyutunu büyüt */
+            margin-bottom: 5px;
+        }
+        .action-buttons-grid button:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -1164,47 +1199,18 @@
     <div id="cafeOwnerPanel" class="container">
         <h2><i class="fas fa-mug-hot"></i> Kafe Yönetim Paneli</h2>
 
-        <h3><i class="fas fa-award"></i> Sadakat Ödüllerini Tanımla</h3>
         <div class="info-card">
-             <p>Müşterilerinizin kaç yıldızda hangi ödülü kazanacağını belirleyin. Değişiklikler anında geçerli olacaktır.</p>
-        </div>
-        <div class="form-group">
-            <label for="rewardStars"><i class="fas fa-star"></i> Kaç Yıldızda Ödül Verilsin?</label>
-            <input type="number" id="rewardStars" value="7" min="1" required>
-        </div>
-        <div class="form-group">
-            <label for="rewardDescription"><i class="fas fa-gift"></i> Ödül Açıklaması:</label>
-            <textarea id="rewardDescription" rows="3" placeholder="Örn: Ücretsiz Orta Boy Filtre Kahve" required></textarea>
-        </div>
-        <button id="saveRewardBtn"><i class="fas fa-save"></i> Ödülü Kaydet</button>
-        <div id="rewardSaveMessage" class="message hidden"></div>
-
-        <h3><i class="fas fa-ticket-alt"></i> Müşteri Kodu Oluştur</h3>
-        <div class="info-card">
-             <p>Her satış sonrası bu butona basarak müşterinize vereceğiniz **tek kullanımlık** bir kod oluşturun. Kod **2 dakika** geçerli kalacaktır.</p>
-        </div>
-        <button id="generateCodeBtn"><i class="fas fa-plus-circle"></i> Yeni Kod Oluştur</button>
-        <div id="generatedCodeDisplay" class="hidden" title="Kopyalamak için tıklayın"></div>
-        <div id="generatedCodeTimer"></div>
-        <div id="codeGenerationMessage" class="message hidden"></div>
-
-        <h3><i class="fas fa-handshake"></i> Sponsor Mekanlarını Yönet</h3>
-        <div class="info-card">
-            <p>Sadakat programınıza katılan sponsor mekanlarınızı buradan ekleyebilir, düzenleyebilir veya kaldırabilirsiniz.</p>
-        </div>
-        <button id="manageSponsorsBtn"><i class="fas fa-cog"></i> Sponsor Mekanlarını Yönet</button>
-
-        <h3><i class="fas fa-users-cog"></i> Kafe Adminlerini Yönet</h3>
-        <div class="info-card">
-            <p>Yeni kafe admin kullanıcıları oluşturabilir, mevcut adminlerin şifrelerini güncelleyebilir veya silebilirsiniz.</p>
-        </div>
-        <button id="manageAdminUsersBtn"><i class="fas fa-user-shield"></i> Admin Kullanıcıları Yönet</button>
-
-        <h3><i class="fas fa-chart-line"></i> Sadakat Verileri ve İstatistikler</h3>
-        <div class="info-card">
-             <p>Toplam müşteri sayınızı ve en sadık müşterilerinizi buradan takip edebilirsiniz.</p>
              <p>Toplam Müşteri: <strong id="totalCustomersCount">0</strong></p>
         </div>
+
+        <div class="action-buttons-grid">
+            <button id="openDefineRewardModalBtn"><i class="fas fa-award"></i> Ödül Tanımla</button>
+            <button id="openGenerateCodeModalBtn"><i class="fas fa-ticket-alt"></i> Kod Oluştur</button>
+            <button id="openManageSponsorsModalBtn"><i class="fas fa-handshake"></i> Sponsorları Yönet</button>
+            <button id="openManageAdminUsersModalBtn"><i class="fas fa-user-shield"></i> Adminleri Yönet</button>
+        </div>
+
+        <h3><i class="fas fa-chart-line"></i> Sadakat İstatistikleri</h3>
         <h4><i class="fas fa-medal"></i> En Sadık Müşteriler:</h4>
         <div id="topCustomersList">
             <p class="placeholder-message">Henüz kayıtlı müşteri yok.</p>
@@ -1230,6 +1236,40 @@
             </div>
             <button id="savePersonalInfoBtn"><i class="fas fa-save"></i> Değişiklikleri Kaydet</button>
             <div id="editPersonalInfoMessage" class="message hidden"></div>
+        </div>
+    </div>
+
+    <div id="defineRewardModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" data-modal="defineRewardModal">&times;</span>
+            <h3><i class="fas fa-award"></i> Sadakat Ödüllerini Tanımla</h3>
+            <div class="info-card">
+                 <p>Müşterilerinizin kaç yıldızda hangi ödülü kazanacağını belirleyin. Değişiklikler anında geçerli olacaktır.</p>
+            </div>
+            <div class="form-group">
+                <label for="rewardStars"><i class="fas fa-star"></i> Kaç Yıldızda Ödül Verilsin?</label>
+                <input type="number" id="rewardStars" value="7" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="rewardDescription"><i class="fas fa-gift"></i> Ödül Açıklaması:</label>
+                <textarea id="rewardDescription" rows="3" placeholder="Örn: Ücretsiz Orta Boy Filtre Kahve" required></textarea>
+            </div>
+            <button id="saveRewardBtn"><i class="fas fa-save"></i> Ödülü Kaydet</button>
+            <div id="rewardSaveMessage" class="message hidden"></div>
+        </div>
+    </div>
+
+    <div id="generateCodeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" data-modal="generateCodeModal">&times;</span>
+            <h3><i class="fas fa-ticket-alt"></i> Müşteri Kodu Oluştur</h3>
+            <div class="info-card">
+                 <p>Her satış sonrası bu butona basarak müşterinize vereceğiniz **tek kullanımlık** bir kod oluşturun. Kod **2 dakika** geçerli kalacaktır.</p>
+            </div>
+            <button id="generateCodeBtn"><i class="fas fa-plus-circle"></i> Yeni Kod Oluştur</button>
+            <div id="generatedCodeDisplay" class="hidden" title="Kopyalamak için tıklayın"></div>
+            <div id="generatedCodeTimer"></div>
+            <div id="codeGenerationMessage" class="message hidden"></div>
         </div>
     </div>
 
@@ -1842,6 +1882,10 @@
             if (currentCustomer) {
                 updateCustomerPanel(); // Müşteri panelini de güncelle
             }
+            // Modalı kapat
+            setTimeout(() => {
+                closeModal('defineRewardModal');
+            }, 1000);
         }
 
         /**
@@ -2254,10 +2298,19 @@
             // Kafe Sahibi Butonları
             document.getElementById('showCafeOwnerLoginBtn').addEventListener('click', () => {
                 showPanel('cafeOwnerLoginSection');
+                // Kod oluşturma modalının içeriğini temizle
                 clearInterval(codeTimerInterval);
                 document.getElementById('generatedCodeDisplay').classList.add('hidden');
                 document.getElementById('generatedCodeTimer').textContent = '';
+                document.getElementById('codeGenerationMessage').classList.add('hidden');
+
+                // Ödül tanımla modalının içeriğini güncellle
+                const cafeSettings = getCafeSettings();
+                document.getElementById('rewardStars').value = cafeSettings.rewardStars;
+                document.getElementById('rewardDescription').value = cafeSettings.rewardDescription;
+                document.getElementById('rewardSaveMessage').classList.add('hidden');
             });
+
             document.getElementById('ownerLoginBtn').addEventListener('click', handleOwnerLogin);
             document.getElementById('ownerLogoutBtn').addEventListener('click', () => {
                 clearInterval(codeTimerInterval);
@@ -2271,6 +2324,33 @@
             document.getElementById('backToCustomerLoginFromAdmin').addEventListener('click', () => {
                 showPanel('customerLoginSection');
             });
+
+            // Admin Paneli Modal Açma Butonları
+            document.getElementById('openDefineRewardModalBtn').addEventListener('click', () => {
+                // Ödül tanımla modalının içeriğini güncellle
+                const cafeSettings = getCafeSettings();
+                document.getElementById('rewardStars').value = cafeSettings.rewardStars;
+                document.getElementById('rewardDescription').value = cafeSettings.rewardDescription;
+                document.getElementById('rewardSaveMessage').classList.add('hidden');
+                openModal('defineRewardModal');
+            });
+            document.getElementById('openGenerateCodeModalBtn').addEventListener('click', () => {
+                 // Kod oluşturma modalının içeriğini temizle
+                clearInterval(codeTimerInterval);
+                document.getElementById('generatedCodeDisplay').classList.add('hidden');
+                document.getElementById('generatedCodeTimer').textContent = '';
+                document.getElementById('codeGenerationMessage').classList.add('hidden');
+                openModal('generateCodeModal');
+            });
+            document.getElementById('openManageSponsorsModalBtn').addEventListener('click', () => {
+                renderSponsorsList();
+                openModal('manageSponsorsModal');
+            });
+            document.getElementById('openManageAdminUsersModalBtn').addEventListener('click', () => {
+                renderAdminUsersList();
+                openModal('manageAdminUsersModal');
+            });
+
 
             document.getElementById('saveRewardBtn').addEventListener('click', handleSaveReward);
             document.getElementById('generateCodeBtn').addEventListener('click', handleGenerateCode);
@@ -2303,17 +2383,9 @@
             document.getElementById('savePersonalInfoBtn').addEventListener('click', handleSavePersonalInfo);
 
             // Sponsor yönetimi butonu ve işlemleri (Admin paneli için)
-            document.getElementById('manageSponsorsBtn').addEventListener('click', () => {
-                renderSponsorsList();
-                openModal('manageSponsorsModal');
-            });
             document.getElementById('addSponsorBtn').addEventListener('click', handleAddEditSponsor);
 
             // Admin kullanıcıları yönet butonu ve işlemleri
-            document.getElementById('manageAdminUsersBtn').addEventListener('click', () => {
-                renderAdminUsersList();
-                openModal('manageAdminUsersModal');
-            });
             document.getElementById('createAdminUserBtn').addEventListener('click', handleCreateEditAdminUser);
 
 
@@ -2338,6 +2410,17 @@
                         document.getElementById('newAdminUsername').value = '';
                         document.getElementById('newAdminPassword').value = '';
                         document.getElementById('createAdminUserMessage').classList.add('hidden');
+                    }
+                    // Kod oluşturma modalı kapanırken timer'ı durdur
+                    if (event.target.dataset.modal === 'generateCodeModal') {
+                        clearInterval(codeTimerInterval);
+                        document.getElementById('generatedCodeDisplay').classList.add('hidden');
+                        document.getElementById('generatedCodeTimer').textContent = '';
+                        document.getElementById('codeGenerationMessage').classList.add('hidden');
+                    }
+                    // Ödül tanımla modalı kapanırken mesajı gizle
+                    if (event.target.dataset.modal === 'defineRewardModal') {
+                        document.getElementById('rewardSaveMessage').classList.add('hidden');
                     }
                 });
             });
@@ -2364,6 +2447,17 @@
                             document.getElementById('newAdminUsername').value = '';
                             document.getElementById('newAdminPassword').value = '';
                             document.getElementById('createAdminUserMessage').classList.add('hidden');
+                        }
+                        // Kod oluşturma modalı kapanırken timer'ı durdur
+                        if (modal.id === 'generateCodeModal') {
+                            clearInterval(codeTimerInterval);
+                            document.getElementById('generatedCodeDisplay').classList.add('hidden');
+                            document.getElementById('generatedCodeTimer').textContent = '';
+                            document.getElementById('codeGenerationMessage').classList.add('hidden');
+                        }
+                        // Ödül tanımla modalı kapanırken mesajı gizle
+                        if (modal.id === 'defineRewardModal') {
+                            document.getElementById('rewardSaveMessage').classList.add('hidden');
                         }
                     }
                 });
